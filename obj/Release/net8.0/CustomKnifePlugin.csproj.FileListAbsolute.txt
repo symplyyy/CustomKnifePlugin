@@ -1,0 +1,12 @@
+C:\Users\symplyy\Desktop\TestDevPlugin\CustomKnife\CustomKnifePlugin\bin\Release\net8.0\CustomKnifePlugin.deps.json
+C:\Users\symplyy\Desktop\TestDevPlugin\CustomKnife\CustomKnifePlugin\bin\Release\net8.0\CustomKnifePlugin.dll
+C:\Users\symplyy\Desktop\TestDevPlugin\CustomKnife\CustomKnifePlugin\bin\Release\net8.0\CustomKnifePlugin.pdb
+C:\Users\symplyy\Desktop\TestDevPlugin\CustomKnife\CustomKnifePlugin\obj\Release\net8.0\CustomKnifePlugin.csproj.AssemblyReference.cache
+C:\Users\symplyy\Desktop\TestDevPlugin\CustomKnife\CustomKnifePlugin\obj\Release\net8.0\CustomKnifePlugin.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\symplyy\Desktop\TestDevPlugin\CustomKnife\CustomKnifePlugin\obj\Release\net8.0\CustomKnifePlugin.AssemblyInfoInputs.cache
+C:\Users\symplyy\Desktop\TestDevPlugin\CustomKnife\CustomKnifePlugin\obj\Release\net8.0\CustomKnifePlugin.AssemblyInfo.cs
+C:\Users\symplyy\Desktop\TestDevPlugin\CustomKnife\CustomKnifePlugin\obj\Release\net8.0\CustomKnifePlugin.csproj.CoreCompileInputs.cache
+C:\Users\symplyy\Desktop\TestDevPlugin\CustomKnife\CustomKnifePlugin\obj\Release\net8.0\CustomKnifePlugin.dll
+C:\Users\symplyy\Desktop\TestDevPlugin\CustomKnife\CustomKnifePlugin\obj\Release\net8.0\refint\CustomKnifePlugin.dll
+C:\Users\symplyy\Desktop\TestDevPlugin\CustomKnife\CustomKnifePlugin\obj\Release\net8.0\CustomKnifePlugin.pdb
+C:\Users\symplyy\Desktop\TestDevPlugin\CustomKnife\CustomKnifePlugin\obj\Release\net8.0\ref\CustomKnifePlugin.dll
