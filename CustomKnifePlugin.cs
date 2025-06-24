@@ -14,95 +14,78 @@ namespace CustomKnifePlugin;
 public class CustomKnifePlugin : BasePlugin
 {
     public override string ModuleName => "Custom Knife Plugin";
-    public override string ModuleVersion => "1.0.0";
+    public override string ModuleVersion => "2.0.0";
     public override string ModuleAuthor => "Your Name";
     public override string ModuleDescription => "Permet aux joueurs de changer leur couteau via une commande chat";
 
-    // Dictionnaire pour stocker le choix de couteau de chaque joueur (SteamID -> KnifeID)
-    private readonly Dictionary<string, int> _playerKnifeChoices = new();
+    private readonly Dictionary<string, string> _playerKnifeChoices = new();
 
-    private readonly Dictionary<string, int> _availableKnives = new()
+    private readonly Dictionary<string, string> _availableKnives = new()
     {
-        { "karambit", 507 },
-        { "m9", 508 },
-        { "butterfly", 515 },
-        { "bayonet", 500 },
-        { "flip", 505 },
-        { "gut", 506 },
-        { "classic", 503 },
-        { "skeleton", 525 },
-        { "nomad", 521 },
-        { "talon", 523 },
-        { "stiletto", 522 },
-        { "ursus", 519 },
-        { "paracord", 517 },
-        { "survival", 518 },
-        { "huntsman", 509 },
-        { "falchion", 512 },
-        { "bowie", 514 },
-        { "daggers", 516 },
-        { "navaja", 520 },
-        { "kukri", 526 }
+        { "karambit", "weapon_knife_karambit" },
+        { "m9", "weapon_knife_m9_bayonet" },
+        { "butterfly", "weapon_knife_butterfly" },
+        { "bayonet", "weapon_bayonet" },
+        { "flip", "weapon_knife_flip" },
+        { "gut", "weapon_knife_gut" },
+        { "classic", "weapon_knife_css" },
+        { "skeleton", "weapon_knife_skeleton" },
+        { "nomad", "weapon_knife_outdoor" },
+        { "talon", "weapon_knife_widowmaker" },
+        { "stiletto", "weapon_knife_stiletto" },
+        { "ursus", "weapon_knife_ursus" },
+        { "paracord", "weapon_knife_cord" },
+        { "survival", "weapon_knife_canis" },
+        { "huntsman", "weapon_knife_tactical" },
+        { "falchion", "weapon_knife_falchion" },
+        { "bowie", "weapon_knife_survival_bowie" },
+        { "daggers", "weapon_knife_push" },
+        { "navaja", "weapon_knife_gypsy_jackknife" },
+        { "default", "weapon_knife" }
     };
 
     public override void Load(bool hotReload)
     {
         AddCommand("css_knife", "Changer votre couteau", CommandKnife);
+        AddCommand("css_knives", "Afficher la liste des couteaux disponibles", CommandKnifeList);
+        
         RegisterListener<Listeners.OnMapStart>(OnMapStart);
-
-        // Créer un timer qui vérifie les couteaux toutes les 0.1 secondes
-        AddTimer(0.1f, CheckKnives, TimerFlags.REPEAT);
-    }
-
-    private void CheckKnives()
-    {
-        foreach (var player in Utilities.GetPlayers())
-        {
-            if (player == null || !player.IsValid || player.IsBot || !player.PlayerPawn.IsValid)
-                continue;
-
-            string steamId = player.SteamID.ToString();
-            if (!_playerKnifeChoices.TryGetValue(steamId, out int knifeId))
-                continue;
-
-            var pawn = player.PlayerPawn.Value;
-            if (pawn == null) continue;
-
-            foreach (var weapon in pawn.WeaponServices.MyWeapons)
-            {
-                if (weapon?.Value == null) continue;
-                var weaponName = weapon.Value.DesignerName;
-                if (weaponName == null) continue;
-
-                if (weaponName.Contains("knife") || weaponName.Contains("bayonet"))
-                {
-                    // Réappliquer le skin du couteau
-                    Server.ExecuteCommand($"subclass_create {knifeId}");
-                    Server.ExecuteCommand($"subclass_change {knifeId} weapon_knife");
-                    break;
-                }
-            }
-        }
+        RegisterEventHandler<EventPlayerSpawn>(OnPlayerSpawn);
+        RegisterEventHandler<EventPlayerConnectFull>(OnPlayerConnectFull);
+        RegisterEventHandler<EventPlayerDisconnect>(OnPlayerDisconnect);
     }
 
     private void OnMapStart(string mapName)
     {
-        // Activer les commandes nécessaires au démarrage de la map
-        Server.ExecuteCommand("sv_cheats 1");
-        Server.ExecuteCommand("mp_drop_knife_enable 1");
+        AddTimer(1.0f, () => {
+            Server.ExecuteCommand("mp_drop_knife_enable 1");
+        });
     }
 
-    private void ApplyKnife(CCSPlayerController player, int knifeId)
+    [GameEventHandler]
+    public HookResult OnPlayerConnectFull(EventPlayerConnectFull @event, GameEventInfo info)
     {
-        if (player == null || !player.IsValid || !player.PlayerPawn.IsValid) return;
+        var player = @event.Userid;
+        if (player == null || !player.IsValid || player.IsBot)
+            return HookResult.Continue;
 
-        AddTimer(0.1f, () => {
-            if (player.IsValid && player.PlayerPawn.IsValid)
-            {
-                Server.ExecuteCommand($"subclass_create {knifeId}");
-                Server.ExecuteCommand($"subclass_change {knifeId} weapon_knife");
-            }
-        });
+        string steamId = player.SteamID.ToString();
+        if (!_playerKnifeChoices.ContainsKey(steamId))
+        {
+            _playerKnifeChoices[steamId] = "default";
+        }
+
+        return HookResult.Continue;
+    }
+
+    [GameEventHandler]
+    public HookResult OnPlayerDisconnect(EventPlayerDisconnect @event, GameEventInfo info)
+    {
+        var player = @event.Userid;
+        if (player == null || !player.IsValid)
+            return HookResult.Continue;
+
+        return HookResult.Continue;
     }
 
     [GameEventHandler]
@@ -114,64 +97,125 @@ public class CustomKnifePlugin : BasePlugin
             return HookResult.Continue;
 
         string steamId = player.SteamID.ToString();
-        if (_playerKnifeChoices.TryGetValue(steamId, out int knifeId))
-        {
-            ApplyKnife(player, knifeId);
-        }
+        
+        AddTimer(0.5f, () => {
+            ApplyPlayerKnife(player);
+        });
 
         return HookResult.Continue;
+    }
+
+    private void ApplyPlayerKnife(CCSPlayerController player)
+    {
+        if (player == null || !player.IsValid || player.IsBot || !player.PlayerPawn.IsValid)
+            return;
+
+        string steamId = player.SteamID.ToString();
+        if (!_playerKnifeChoices.TryGetValue(steamId, out string? knifeChoice) || knifeChoice == "default")
+            return;
+
+        if (!_availableKnives.TryGetValue(knifeChoice, out string? knifeEntity))
+            return;
+
+        var pawn = player.PlayerPawn.Value;
+        if (pawn?.WeaponServices == null)
+            return;
+
+        foreach (var weapon in pawn.WeaponServices.MyWeapons)
+        {
+            if (weapon?.Value == null) continue;
+            var weaponName = weapon.Value.DesignerName;
+            if (weaponName == null) continue;
+
+            if (weaponName.Contains("knife") || weaponName.Contains("bayonet"))
+            {
+                weapon.Value.Remove();
+                break;
+            }
+        }
+
+        AddTimer(0.1f, () => {
+            if (player.IsValid && player.PlayerPawn.IsValid)
+            {
+                player.GiveNamedItem(knifeEntity);
+            }
+        });
+    }
+
+    private void CommandKnifeList(CCSPlayerController? player, CommandInfo command)
+    {
+        if (player == null || !player.IsValid || player.IsBot)
+            return;
+
+        var knivesList = string.Join(", ", _availableKnives.Keys.Where(k => k != "default"));
+        player.PrintToChat($" \x04[Knife] \x01Couteaux disponibles: {knivesList}");
+        player.PrintToChat($" \x04[Knife] \x01Usage: !knife <nom_du_couteau>");
     }
 
     private void CommandKnife(CCSPlayerController? player, CommandInfo command)
     {
         if (player == null || !player.IsValid || player.IsBot || !player.PlayerPawn.IsValid)
-        {
             return;
-        }
 
         if (command.ArgCount < 2)
         {
-            player.PrintToChat($" \x04[Knife] \x01Usage: !knife <{string.Join("/", _availableKnives.Keys)}>");
+            var knivesList = string.Join(", ", _availableKnives.Keys.Where(k => k != "default"));
+            player.PrintToChat($" \x04[Knife] \x01Usage: !knife <{knivesList}>");
+            player.PrintToChat($" \x04[Knife] \x01Ou tapez !knives pour voir la liste complète");
             return;
         }
 
         string requestedKnife = command.ArgByIndex(1).ToLower();
 
-        if (!_availableKnives.ContainsKey(requestedKnife))
+        if (requestedKnife == "reset" || requestedKnife == "default")
         {
-            player.PrintToChat($" \x04[Knife] \x01Couteau non valide. Choix disponibles: {string.Join(", ", _availableKnives.Keys)}");
+            _playerKnifeChoices[player.SteamID.ToString()] = "default";
+            player.PrintToChat($" \x04[Knife] \x01Votre couteau a été remis par défaut!");
+            
+            RestartPlayer(player);
             return;
         }
 
-        // Sauvegarder le choix du joueur
-        int knifeId = _availableKnives[requestedKnife];
-        _playerKnifeChoices[player.SteamID.ToString()] = knifeId;
-
-        // Appliquer le changement de couteau
-        ApplyKnife(player, knifeId);
-
-        // Forcer le joueur à lâcher son couteau actuel
-        var pawn = player.PlayerPawn.Value;
-        if (pawn != null)
+        if (!_availableKnives.ContainsKey(requestedKnife) || requestedKnife == "default")
         {
-            foreach (var weapon in pawn.WeaponServices.MyWeapons)
-            {
-                if (weapon?.Value == null) continue;
-                var weaponName = weapon.Value.DesignerName;
-                if (weaponName == null) continue;
-
-                if (weaponName.Contains("knife") || weaponName.Contains("bayonet"))
-                {
-                    Server.ExecuteCommand($"sm_slay #{player.UserId}");
-                    AddTimer(0.1f, () => {
-                        if (player.IsValid)
-                        {
-                            player.PrintToChat($" \x04[Knife] \x01Votre couteau a été changé en {requestedKnife}! Ce choix sera conservé après votre mort.");
-                        }
-                    });
-                    break;
-                }
-            }
+            var knivesList = string.Join(", ", _availableKnives.Keys.Where(k => k != "default"));
+            player.PrintToChat($" \x04[Knife] \x01Couteau non valide. Choix disponibles: {knivesList}");
+            return;
         }
+
+        string steamId = player.SteamID.ToString();
+        _playerKnifeChoices[steamId] = requestedKnife;
+
+        player.PrintToChat($" \x04[Knife] \x01Votre couteau a été changé en {requestedKnife}!");
+        player.PrintToChat($" \x04[Knife] \x01Vous respawnerez avec ce couteau à chaque round.");
+        
+        RestartPlayer(player);
+    }
+
+    private void RestartPlayer(CCSPlayerController player)
+    {
+        if (player == null || !player.IsValid || !player.PlayerPawn.IsValid)
+            return;
+
+        var pawn = player.PlayerPawn.Value;
+        if (pawn == null) return;
+
+        var position = pawn.CBodyComponent?.SceneNode?.AbsOrigin;
+        var angles = pawn.CBodyComponent?.SceneNode?.AbsRotation;
+        var team = player.TeamNum;
+
+        pawn.Health = 0;
+        pawn.TakesDamage = false;
+        
+        AddTimer(0.1f, () => {
+            if (player.IsValid)
+            {
+                player.Respawn();
+                
+                AddTimer(0.5f, () => {
+                    ApplyPlayerKnife(player);
+                });
+            }
+        });
     }
 }

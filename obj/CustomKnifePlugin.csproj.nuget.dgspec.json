@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\symplyy\\Desktop\\TestDevPlugin\\CustomKnife\\CustomKnifePlugin\\CustomKnifePlugin.csproj": {}
+    "C:\\Users\\Stagiaire MMI\\Desktop\\csplugin\\CustomKnifePlugin\\CustomKnifePlugin.csproj": {}
   },
   "projects": {
-    "C:\\Users\\symplyy\\Desktop\\TestDevPlugin\\CustomKnife\\CustomKnifePlugin\\CustomKnifePlugin.csproj": {
+    "C:\\Users\\Stagiaire MMI\\Desktop\\csplugin\\CustomKnifePlugin\\CustomKnifePlugin.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\symplyy\\Desktop\\TestDevPlugin\\CustomKnife\\CustomKnifePlugin\\CustomKnifePlugin.csproj",
+        "projectUniqueName": "C:\\Users\\Stagiaire MMI\\Desktop\\csplugin\\CustomKnifePlugin\\CustomKnifePlugin.csproj",
         "projectName": "CustomKnifePlugin",
-        "projectPath": "C:\\Users\\symplyy\\Desktop\\TestDevPlugin\\CustomKnife\\CustomKnifePlugin\\CustomKnifePlugin.csproj",
-        "packagesPath": "C:\\Users\\symplyy\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\symplyy\\Desktop\\TestDevPlugin\\CustomKnife\\CustomKnifePlugin\\obj\\",
+        "projectPath": "C:\\Users\\Stagiaire MMI\\Desktop\\csplugin\\CustomKnifePlugin\\CustomKnifePlugin.csproj",
+        "packagesPath": "C:\\Users\\Stagiaire MMI\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Stagiaire MMI\\Desktop\\csplugin\\CustomKnifePlugin\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\symplyy\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Stagiaire MMI\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"

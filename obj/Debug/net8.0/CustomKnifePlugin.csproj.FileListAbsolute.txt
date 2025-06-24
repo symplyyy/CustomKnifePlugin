@@ -1,0 +1,13 @@
+C:\Users\Stagiaire MMI\Desktop\csplugin\CustomKnifePlugin\obj\Debug\net8.0\CustomKnifePlugin.csproj.AssemblyReference.cache
+C:\Users\Stagiaire MMI\Desktop\csplugin\CustomKnifePlugin\obj\Debug\net8.0\CustomKnifePlugin.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Stagiaire MMI\Desktop\csplugin\CustomKnifePlugin\obj\Debug\net8.0\CustomKnifePlugin.AssemblyInfoInputs.cache
+C:\Users\Stagiaire MMI\Desktop\csplugin\CustomKnifePlugin\obj\Debug\net8.0\CustomKnifePlugin.AssemblyInfo.cs
+C:\Users\Stagiaire MMI\Desktop\csplugin\CustomKnifePlugin\obj\Debug\net8.0\CustomKnifePlugin.csproj.CoreCompileInputs.cache
+C:\Users\Stagiaire MMI\Desktop\csplugin\CustomKnifePlugin\obj\Debug\net8.0\CustomKnifePlugin.sourcelink.json
+C:\Users\Stagiaire MMI\Desktop\csplugin\CustomKnifePlugin\bin\Debug\net8.0\CustomKnifePlugin.deps.json
+C:\Users\Stagiaire MMI\Desktop\csplugin\CustomKnifePlugin\bin\Debug\net8.0\CustomKnifePlugin.dll
+C:\Users\Stagiaire MMI\Desktop\csplugin\CustomKnifePlugin\bin\Debug\net8.0\CustomKnifePlugin.pdb
+C:\Users\Stagiaire MMI\Desktop\csplugin\CustomKnifePlugin\obj\Debug\net8.0\CustomKnifePlugin.dll
+C:\Users\Stagiaire MMI\Desktop\csplugin\CustomKnifePlugin\obj\Debug\net8.0\refint\CustomKnifePlugin.dll
+C:\Users\Stagiaire MMI\Desktop\csplugin\CustomKnifePlugin\obj\Debug\net8.0\CustomKnifePlugin.pdb
+C:\Users\Stagiaire MMI\Desktop\csplugin\CustomKnifePlugin\obj\Debug\net8.0\ref\CustomKnifePlugin.dll
